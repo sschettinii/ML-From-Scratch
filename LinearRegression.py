@@ -1,3 +1,7 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+
 # load and clean housing dataset
 df_housing = pd.read_csv("data/housing.csv")
 df_housing.drop_duplicates(inplace=True)
@@ -24,3 +28,14 @@ y_scaled = scaler.fit_transform(y.reshape(-1, 1))
 
 X_train_housing = X_scaled.T
 y_train_housing = y_scaled.reshape(1, -1)
+
+def get_mse(predictions, y):
+    n = len(predictions)
+    mse = (1 / n) * np.sum(predictions - y)
+    return mse
+
+
+
+def train_linear_regression(X_train, y_train):
+    b, i = []
+    return i, b
