@@ -26,12 +26,12 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 y_scaled = scaler.fit_transform(y.reshape(-1, 1))
 
-X_train_housing = X_scaled.T
-y_train_housing = y_scaled.reshape(1, -1)
+X_train_housing = np.c_[np.ones((X_scaled.shape[0], 1)), X_scaled]
+y_train_housing = y_scaled
 
 def get_mse(predictions, y):
     n = len(predictions)
-    mse = (1 / n) * np.sum(predictions - y)
+    mse = (1 / n) * np.sum((predictions - y) ** 2)
     return mse
 
 def estimate_betas(X_train, y_train, method):
@@ -40,20 +40,21 @@ def estimate_betas(X_train, y_train, method):
             betas = 1
             return betas
         case "OLS":
-            betas = ((X_train.T * X_train) ** -1) * X_train.T * y_train
+            betas = np.linalg.pinv(X_train.T @ X_train) @ X_train.T @ y_train
             return betas
     
     return betas
 
-def get_predictions(X_train, i, b):
-    predictions = X_train * b + i
+def get_predictions(X_train, b):
+    predictions = X_train @ b
     return predictions
 
 # OLS -> Ordinary Least Squares 
 # MLE -> Maximum Likelihood Estimation
-def train_linear_regression(X_train, y_train, method="MLE"):
+def train_linear_regression(X_train, y_train, method="OLS"):
     betas = estimate_betas(X_train, y_train, method)
     predictions = get_predictions(X_train, betas)
+    print("MSE do modelo:", get_mse(predictions, y_train))
     return betas
 
 train_linear_regression(X_train_housing, y_train_housing)
