@@ -34,9 +34,16 @@ def get_mse(predictions, y):
     mse = (1 / n) * np.sum(predictions - y)
     return mse
 
-def estimate_params(X_train, y_train):
-    i, b = []
-    return i, b
+def estimate_betas(X_train, y_train, method):
+    match method:
+        case "MLE":
+            betas = 1
+            return betas
+        case "OLS":
+            betas = ((X_train.T * X_train) ** -1) * X_train.T * y_train
+            return betas
+    
+    return betas
 
 def get_predictions(X_train, i, b):
     predictions = X_train * b + i
@@ -45,8 +52,8 @@ def get_predictions(X_train, i, b):
 # OLS -> Ordinary Least Squares 
 # MLE -> Maximum Likelihood Estimation
 def train_linear_regression(X_train, y_train, method="MLE"):
-    b, i = estimate_params(X_train, y_train)
-    predictions = get_predictions(X_train, i, b)
-    return i, b
+    betas = estimate_betas(X_train, y_train, method)
+    predictions = get_predictions(X_train, betas)
+    return betas
 
 train_linear_regression(X_train_housing, y_train_housing)
