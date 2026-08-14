@@ -57,4 +57,4 @@ def train_linear_regression(X_train, y_train, method="OLS"):
     print("MSE do modelo:", get_mse(predictions, y_train))
     return betas
 
-train_linear_regression(X_train_housing, y_train_housing)
+train_linear_regression(X_train_housing, y_train_housing, "OLS")
